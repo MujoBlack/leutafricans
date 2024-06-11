@@ -1,14 +1,12 @@
 'use client'
 
 import { PRODUCT_CATEGORIES } from '@/config'
-/*import { useOnClickOutside } from '@/hooks/use-on-click-outside'*/
+import { useOnClickOutside } from '@/hooks/use-on-click-outside'
 import { useEffect, useRef, useState } from 'react'
 import NavItem from './NavItem'
 
 const NavItems = () => {
-  const [activeIndex, setActiveIndex] = useState<
-    null | number
-  >(null)
+  const [activeIndex, setActiveIndex] = useState<null | number>(null)
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -32,7 +30,7 @@ const NavItems = () => {
 
   return (
     <div className='flex gap-4 h-full' ref={navRef}>
-      {PRODUCT_CATEGORIES.map((category, i) => {
+      {PRODUCT_CATEGORIES.filter(category => category.showInNavbar).map((category, i) => {
         const handleOpen = () => {
           if (activeIndex === i) {
             setActiveIndex(null)

@@ -2,6 +2,7 @@ export const PRODUCT_CATEGORIES = [
   {
     label: 'New',
     value: 'new' as const,
+    showInNavbar: true,
     featured: [
       {
         name: 'Editor picks',
@@ -23,10 +24,11 @@ export const PRODUCT_CATEGORIES = [
   {
     label: 'Bags',
     value: 'bags' as const,
+    showInNavbar: true,
     featured: [
       {
         name: 'Summer Bags',
-        href: `/products?category=bags`,
+        href: `/products?category=Summer Bags`,
         imageSrc: '/nav/bags/summer-bags.webp',
       },
       {
@@ -45,6 +47,7 @@ export const PRODUCT_CATEGORIES = [
   {
       label: 'Dresses',
       value: 'dresses' as const,
+      showInNavbar: true,
       featured: [
         {
           name: 'Maxi',
@@ -67,6 +70,7 @@ export const PRODUCT_CATEGORIES = [
     {
       label: 'Accessories',
       value: 'accessories' as const,
+      showInNavbar: true,
       featured: [
         {
           name: 'Hats & hats',
@@ -85,5 +89,22 @@ export const PRODUCT_CATEGORIES = [
         },
       ],
     },
+    
+   {
+    label: 'Summer Bags',
+    value: 'summerbags' as const,
+    showInNavbar: false, // This category will not appear in the navbar
+    featured: [
+      {
+        name: 'Raffia',
+        href: `/products?category=Summer Bags`,
+      },
+    ],
+  },
+    
 ]
+
+
+
+
 

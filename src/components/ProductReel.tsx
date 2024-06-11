@@ -11,23 +11,24 @@ interface ProductReelProps {
   subtitle?: string
   href?: string
   query: TQueryValidator
+  category: string // Added category prop
 }
 
 const FALLBACK_LIMIT = 4
 
 const ProductReel = (props: ProductReelProps) => {
-  const { title, subtitle, href, query } = props
+  const { title, subtitle, href, query, category } = props // Destructure category prop
 
-  const { data: queryResults, isLoading } =
-    trpc.getInfiniteProducts.useInfiniteQuery(
-      {
-        limit: query.limit ?? FALLBACK_LIMIT,
-        query,
-      },
-      {
-        getNextPageParam: (lastPage) => lastPage.nextPage,
-      }
-    )
+  // Modify the query to include the category
+  const { data: queryResults, isLoading } = trpc.getInfiniteProducts.useInfiniteQuery(
+    {
+      limit: query.limit ?? FALLBACK_LIMIT,
+      query: { ...query, category }, // Include category in the query
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    }
+  )
 
   const products = queryResults?.pages.flatMap(
     (page) => page.items

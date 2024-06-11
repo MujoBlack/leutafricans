@@ -1,3 +1,5 @@
+// src/trpc/index.ts
+
 import { z } from 'zod'
 import { authRouter } from './auth-router'
 import { publicProcedure, router } from './trpc'
@@ -14,12 +16,14 @@ export const appRouter = router({
       z.object({
         limit: z.number().min(1).max(100),
         cursor: z.number().nullish(),
-        query: QueryValidator,
+        query: QueryValidator.extend({
+          category: z.string().optional(), // Extend the query validator to include category
+        }),
       })
     )
     .query(async ({ input }) => {
       const { query, cursor } = input
-      const { sort, limit, ...queryOpts } = query
+      const { sort, limit, category, ...queryOpts } = query
 
       const payload = await getPayloadClient()
 
@@ -29,8 +33,10 @@ export const appRouter = router({
       > = {}
 
       Object.entries(queryOpts).forEach(([key, value]) => {
-        parsedQueryOpts[key] = {
-          equals: value,
+        if (typeof value === 'string') {
+          parsedQueryOpts[key] = {
+            equals: value,
+          }
         }
       })
 
@@ -47,6 +53,7 @@ export const appRouter = router({
             equals: 'approved',
           },
           ...parsedQueryOpts,
+          ...(category ? { category: { equals: category } } : {}), // Add category to the filter if provided
         },
         sort,
         depth: 1,

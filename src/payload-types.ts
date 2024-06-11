@@ -50,7 +50,7 @@ export interface Product {
   name: string;
   description?: string | null;
   price: number;
-  category: 'new' | 'bags' | 'dresses' | 'accessories';
+  category: 'new' | 'bags' | 'dresses' | 'accessories' | 'summerbags';
   product_files: string | ProductFile;
   approvedForSale?: ('pending' | 'approved' | 'denied') | null;
   priceId?: string | null;
