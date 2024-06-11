@@ -1,13 +1,15 @@
 import Navbar from '@/components/Navbar'
-import { Inter } from 'next/font/google'
-import { cn } from '@/lib/utils'
-import './globals.css'
 import Providers from '@/components/Providers'
-
+import { cn, constructMetadata } from '@/lib/utils'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { Toaster } from 'sonner'
+import './globals.css'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
-
+export const metadata = constructMetadata()
 
 export default function RootLayout({
   children,
@@ -22,18 +24,16 @@ export default function RootLayout({
           inter.className
         )}>
         <main className='relative flex flex-col min-h-screen'>
-          
-        <Providers>
+          <Providers>
             <Navbar />
             <div className='flex-grow flex-1'>
               {children}
             </div>
-            </Providers>
-         
-         
-     
+            <Footer />
+          </Providers>
         </main>
-  
+
+        <Toaster position='top-center' richColors />
       </body>
     </html>
   )
