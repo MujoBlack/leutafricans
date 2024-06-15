@@ -5,6 +5,8 @@ import { Product } from '@/payload-types'
 import { trpc } from '@/trpc/client'
 import Link from 'next/link'
 import ProductListing from './ProductListing'
+import { useEffect, useState } from 'react'
+import { Skeleton } from './ui/skeleton'
 
 interface ProductReelProps {
   title: string
@@ -18,6 +20,30 @@ const FALLBACK_LIMIT = 4
 
 const ProductReel = (props: ProductReelProps) => {
   const { title, subtitle, href, query, category } = props // Destructure category prop
+
+  const [isTitleVisible, setIsTitleVisible] = useState<boolean>(false)
+  const [isSubtitleVisible, setIsSubtitleVisible] = useState<boolean>(false)
+  const [isLinkVisible, setIsLinkVisible] = useState<boolean>(false)
+
+  useEffect(() => {
+    const titleTimer = setTimeout(() => {
+      setIsTitleVisible(true)
+    }, 75)
+
+    const subtitleTimer = setTimeout(() => {
+      setIsSubtitleVisible(true)
+    }, 150)
+
+    const linkTimer = setTimeout(() => {
+      setIsLinkVisible(true)
+    }, 225)
+
+    return () => {
+      clearTimeout(titleTimer)
+      clearTimeout(subtitleTimer)
+      clearTimeout(linkTimer)
+    }
+  }, [])
 
   // Modify the query to include the category
   const { data: queryResults, isLoading } = trpc.getInfiniteProducts.useInfiniteQuery(
@@ -44,28 +70,36 @@ const ProductReel = (props: ProductReelProps) => {
   }
 
   return (
-    <section className='py-12'>
-      <div className='md:flex md:items-center md:justify-between mb-4'>
-        <div className='max-w-2xl px-4 lg:max-w-4xl lg:px-0'>
-          {title ? (
-            <h1 className='text-2xl font-bold text-gray-900 sm:text-3xl'>
+    <section className='py-8'>
+      <div className='flex flex-col md:flex-row md:items-center md:justify-between mb-4'>
+        <div className='max-w-2xl lg:max-w-4xl lg:px-0'>
+          {isTitleVisible ? (
+            <h1 className='text-2xl font-bold text-yellow-600 sm:text-3xl'>
               {title}
             </h1>
-          ) : null}
-          {subtitle ? (
-            <p className='mt-2 text-sm text-muted-foreground'>
+          ) : (
+            <Skeleton className='h-8 w-48 rounded-lg' />
+          )}
+          {subtitle && (isSubtitleVisible ? (
+            <p className='text-base font-normal text-black mt-2'>
               {subtitle}
             </p>
-          ) : null}
+          ) : (
+            <Skeleton className='mt-2 h-4 w-64 rounded-lg' />
+          ))}
         </div>
 
         {href ? (
-          <Link
-            href={href}
-            className='hidden text-sm font-medium text-blue-600 hover:text-blue-500 md:block'>
-            Shop the collection{' '}
-            <span aria-hidden='true'>&rarr;</span>
-          </Link>
+          isLinkVisible ? (
+            <Link
+              href={href}
+              className='hidden md:block text-base font-medium text-yellow-700 hover:text-yellow-800'>
+              Shop the collection{' '}
+              <span aria-hidden='true'>&rarr;</span>
+            </Link>
+          ) : (
+            <Skeleton className='hidden md:block h-6 w-40 rounded-lg' />
+          )
         ) : null}
       </div>
 

@@ -2,19 +2,11 @@ import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import ProductReel from '@/components/ProductReel'
 import { PRODUCT_CATEGORIES } from '@/config'
 
-type Param = string | string[] | undefined
-
-interface ProductsPageProps {
-  searchParams: { [key: string]: Param }
-}
-
-const parse = (param: Param) => {
+const parse = (param) => {
   return typeof param === 'string' ? param : undefined
 }
 
-const ProductsPage = ({
-  searchParams,
-}: ProductsPageProps) => {
+const ProductsPage = ({ searchParams }) => {
   const sort = parse(searchParams.sort)
   const category = parse(searchParams.category)
 
@@ -27,13 +19,11 @@ const ProductsPage = ({
       <ProductReel
         title={label ?? 'Browse our Authentic Products'}
         query={{
-          category,
+          category, // Pass the category to the query
           limit: 40,
-          sort:
-            sort === 'desc' || sort === 'asc'
-              ? sort
-              : undefined,
+          sort: sort === 'desc' || sort === 'asc' ? sort : undefined,
         }}
+        category={category} // Ensure category prop is passed
       />
     </MaxWidthWrapper>
   )

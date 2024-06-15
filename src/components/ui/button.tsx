@@ -18,6 +18,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        hotstuf: "bg-black text-white hover:bg-yellow-800",
+        yellow: "bg-yellow-700 text-white hover:bg-yellow-800", // Added yellow variant
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -27,7 +29,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "yellow", // Set yellow as the default variant
       size: "default",
     },
   }
