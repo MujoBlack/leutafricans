@@ -59,6 +59,19 @@ export interface Product {
     image: string | Media;
     id?: string | null;
   }[];
+  sizes?:
+    | {
+        size: string;
+        id?: string | null;
+      }[]
+    | null;
+  colors?:
+    | {
+        colorName: string;
+        swatchUrl: string | Media;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }

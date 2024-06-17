@@ -29,8 +29,9 @@ const AddToCartButton = ({
       }}
       size='lg'
       className='w-full'>
-      {isSuccess ? 'Added!' : 'Add to cart'}
+      {isSuccess ? 'Added!' : 'Add to Bag'}
     </Button>
+    
   )
 }
 

@@ -248,5 +248,45 @@ export const Products: CollectionConfig = {
         },
       ],
     },
+    {
+      name: 'sizes',
+      type: 'array',
+      label: 'Available Sizes',
+      minRows: 1,
+      labels: {
+        singular: 'Size',
+        plural: 'Sizes',
+      },
+      fields: [
+        {
+          name: 'size',
+          type: 'text',
+          required: true,
+        },
+      ],
+    },
+    {
+      name: 'colors',
+      type: 'array',
+      label: 'Available Colors',
+      minRows: 1,
+      labels: {
+        singular: 'Color',
+        plural: 'Colors',
+      },
+      fields: [
+        {
+          name: 'colorName',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'swatchUrl',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+        },
+      ],
+    },
   ],
 }
