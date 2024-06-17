@@ -1,3 +1,5 @@
+'use client';
+
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import AddToCartButton from '@/components/AddToCartButton';
@@ -7,9 +9,9 @@ import ProductReel from '@/components/ProductReel';
 import SwatchSelector from '@/components/SwatchSelector';
 import { PRODUCT_CATEGORIES } from '@/config';
 import { formatPrice } from '@/lib/utils';
-import { Check, Shield } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { fetchProductData } from './fetchProductData';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PageProps {
   params: {
@@ -22,24 +24,36 @@ const BREADCRUMBS = [
   { id: 2, name: 'Products', href: '/products' },
 ];
 
-const Page = async ({ params }: PageProps) => {
+const Page = ({ params }: PageProps) => {
   const { productId } = params;
-  const product = await fetchProductData(productId);
+  const [product, setProduct] = useState(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  if (!product) return notFound();
+  useEffect(() => {
+    const fetchData = async () => {
+      const productData = await fetchProductData(productId);
+      if (!productData) return notFound();
 
-  const label = PRODUCT_CATEGORIES.find(
-    ({ value }) => value === product.category
-  )?.label;
+      setProduct(productData);
 
-  const [imageUrls, setImageUrls] = useState(
-    product.images.map(({ image }) => (typeof image === 'string' ? image : image.url)).filter(Boolean) as string[]
-  );
+      const initialImageUrls = productData.images
+        .map(({ image }) => (typeof image === 'string' ? image : image.url))
+        .filter(Boolean) as string[];
+      setImageUrls(initialImageUrls);
+    };
 
-  const handleSwatchClick = (color: { colorName: string; swatchUrl: { url: string }; id: string }) => {
-    // Assuming each color object has an `imageUrls` field containing an array of URLs for the swatch
-    setImageUrls(color.imageUrls);
+    fetchData();
+  }, [productId]);
+
+  const handleSwatchClick = (color: { colorName: string; swatchUrl: { url: string }; id: string; imageUrls: { imageUrl: { url: string } }[] }) => {
+    setImageUrls(color.imageUrls.map(({ imageUrl }) => imageUrl.url));
   };
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
+  const label = PRODUCT_CATEGORIES.find(({ value }) => value === product.category)?.label;
 
   return (
     <MaxWidthWrapper className="bg-white">
@@ -51,19 +65,11 @@ const Page = async ({ params }: PageProps) => {
               {BREADCRUMBS.map((breadcrumb, i) => (
                 <li key={breadcrumb.href}>
                   <div className="flex items-center text-sm">
-                    <Link
-                      href={breadcrumb.href}
-                      className="font-medium text-sm text-muted-foreground hover:text-gray-900"
-                    >
+                    <Link href={breadcrumb.href} className="font-medium text-sm text-muted-foreground hover:text-gray-900">
                       {breadcrumb.name}
                     </Link>
                     {i !== BREADCRUMBS.length - 1 ? (
-                      <svg
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        className="ml-2 h-5 w-5 flex-shrink-0 text-gray-300"
-                      >
+                      <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="ml-2 h-5 w-5 flex-shrink-0 text-gray-300">
                         <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                       </svg>
                     ) : null}
@@ -73,20 +79,13 @@ const Page = async ({ params }: PageProps) => {
             </ol>
 
             <div className="mt-4">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                {product.name}
-              </h1>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{product.name}</h1>
             </div>
 
             <section className="mt-4">
               <div className="flex items-center">
-                <p className="font-medium text-gray-900">
-                  {formatPrice(product.price)}
-                </p>
-
-                <div className="ml-4 border-l text-muted-foreground border-gray-300 pl-4">
-                  {label}
-                </div>
+                <p className="font-medium text-gray-900">{formatPrice(product.price)}</p>
+                <div className="ml-4 border-l text-muted-foreground border-gray-300 pl-4">{label}</div>
               </div>
 
               {/* Color Options */}
@@ -99,10 +98,7 @@ const Page = async ({ params }: PageProps) => {
                 <h2 className="text-sm font-medium text-gray-900">Size</h2>
                 <div className="mt-4">
                   {(product.sizes || []).map((sizeObj) => (
-                    <button
-                      key={sizeObj.id}
-                      className="inline-flex items-center justify-center px-4 py-2 mr-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                    >
+                    <button key={sizeObj.id} className="inline-flex items-center justify-center px-4 py-2 mr-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                       {sizeObj.size}
                     </button>
                   ))}
@@ -119,23 +115,15 @@ const Page = async ({ params }: PageProps) => {
               </div>
 
               <div className="mt-4 space-y-6">
-                <p className="text-base text-gray-900">
-                  {product.description}
-                </p>
+                <p className="text-base text-gray-900">{product.description}</p>
               </div>
 
               <div className="mt-6 flex items-center">
-                <Check
-                  aria-hidden="true"
-                  className="h-5 w-5 flex-shrink-0 text-green-500"
-                />
-                <p className="ml-2 text-sm text-muted-foreground">
-                  Eligible for instant delivery
-                </p>
+                <Check aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-green-500" />
+                <p className="ml-2 text-sm text-muted-foreground">Eligible for instant delivery</p>
               </div>
 
               <div className="mt-6 flex items-center"></div>
-
             </section>
           </div>
 
@@ -145,16 +133,10 @@ const Page = async ({ params }: PageProps) => {
               <ImageSlider urls={imageUrls} />
             </div>
           </div>
-
         </div>
       </div>
 
-      <ProductReel
-        href="/products"
-        query={{ category: product.category, limit: 4 }}
-        title={`Similar ${label}`}
-        subtitle={`Browse similar high-quality ${label} just like '${product.name}'`}
-      />
+      <ProductReel href="/products" query={{ category: product.category, limit: 4 }} title={`Similar ${label}`} subtitle={`Browse similar high-quality ${label} just like '${product.name}'`} />
     </MaxWidthWrapper>
   );
 };

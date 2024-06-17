@@ -68,7 +68,12 @@ export interface Product {
   colors?:
     | {
         colorName: string;
-        swatchUrl: string | Media;
+        imageUrls?:
+          | {
+              imageUrl: string | Media;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;

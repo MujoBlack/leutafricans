@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import SwatchImage from './SwatchImage';
 
 interface SwatchSelectorProps {
-  colors: Array<{ colorName: string; swatchUrl: { url: string }; id: string }>;
-  onSwatchClick: (color: { colorName: string; swatchUrl: { url: string }; id: string }) => void;
+  colors: Array<{ colorName: string; swatchUrl: { url: string }; id: string; imageUrls: { imageUrl: { url: string } }[] }>;
+  onSwatchClick: (color: { colorName: string; swatchUrl: { url: string }; id: string; imageUrls: { imageUrl: { url: string } }[] }) => void;
 }
 
 const SwatchSelector = ({ colors, onSwatchClick }: SwatchSelectorProps) => {
