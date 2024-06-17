@@ -5,9 +5,10 @@ import SwatchImage from './SwatchImage';
 
 interface SwatchSelectorProps {
   colors: Array<{ colorName: string; swatchUrl: { url: string }; id: string }>;
+  onSwatchClick: (color: { colorName: string; swatchUrl: { url: string }; id: string }) => void;
 }
 
-const SwatchSelector = ({ colors }: SwatchSelectorProps) => {
+const SwatchSelector = ({ colors, onSwatchClick }: SwatchSelectorProps) => {
   const [selectedColor, setSelectedColor] = useState(colors[0]);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ const SwatchSelector = ({ colors }: SwatchSelectorProps) => {
 
   const handleSwatchClick = (color: typeof colors[0]) => {
     setSelectedColor(color);
+    onSwatchClick(color);
   };
 
   if (colors.length === 0) {

@@ -9,6 +9,7 @@ import { PRODUCT_CATEGORIES } from '@/config';
 import { formatPrice } from '@/lib/utils';
 import { Check, Shield } from 'lucide-react';
 import { fetchProductData } from './fetchProductData';
+import { useState } from 'react';
 
 interface PageProps {
   params: {
@@ -31,9 +32,14 @@ const Page = async ({ params }: PageProps) => {
     ({ value }) => value === product.category
   )?.label;
 
-  const validUrls = product.images
-    .map(({ image }) => (typeof image === 'string' ? image : image.url))
-    .filter(Boolean) as string[];
+  const [imageUrls, setImageUrls] = useState(
+    product.images.map(({ image }) => (typeof image === 'string' ? image : image.url)).filter(Boolean) as string[]
+  );
+
+  const handleSwatchClick = (color: { colorName: string; swatchUrl: { url: string }; id: string }) => {
+    // Assuming each color object has an `imageUrls` field containing an array of URLs for the swatch
+    setImageUrls(color.imageUrls);
+  };
 
   return (
     <MaxWidthWrapper className="bg-white">
@@ -85,10 +91,11 @@ const Page = async ({ params }: PageProps) => {
 
               {/* Color Options */}
               <div className="mt-4 space-y-8">
-              <SwatchSelector colors= {product.colors || []} /></div>
+                <SwatchSelector colors={product.colors || []} onSwatchClick={handleSwatchClick} />
+              </div>
 
-                {/* Size Options */}
-                <div className="mt-4">
+              {/* Size Options */}
+              <div className="mt-4">
                 <h2 className="text-sm font-medium text-gray-900">Size</h2>
                 <div className="mt-4">
                   {(product.sizes || []).map((sizeObj) => (
@@ -103,13 +110,13 @@ const Page = async ({ params }: PageProps) => {
               </div>
 
               {/* Add to cart part */}
-          <div className="mt-4 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
-            <div>
-              <div className="mt-8">
-                <AddToCartButton product={product} />
+              <div className="mt-4 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
+                <div>
+                  <div className="mt-8">
+                    <AddToCartButton product={product} />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
               <div className="mt-4 space-y-6">
                 <p className="text-base text-gray-900">
@@ -127,22 +134,18 @@ const Page = async ({ params }: PageProps) => {
                 </p>
               </div>
 
-            
-
-              
               <div className="mt-6 flex items-center"></div>
-              
+
             </section>
           </div>
 
           {/* Product images */}
           <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
             <div className="aspect-square rounded-lg">
-              <ImageSlider urls={validUrls} />
+              <ImageSlider urls={imageUrls} />
             </div>
           </div>
 
-          
         </div>
       </div>
 
