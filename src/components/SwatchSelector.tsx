@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react';
 import SwatchImage from './SwatchImage';
 
 interface SwatchSelectorProps {
-  colors: Array<{ colorName: string; swatchUrl: { url: string }; id: string; imageUrls: { imageUrl: { url: string } }[] }>;
-  onSwatchClick: (color: { colorName: string; swatchUrl: { url: string }; id: string; imageUrls: { imageUrl: { url: string } }[] }) => void;
+  colors: Array<{ colorName: string; swatchUrl: { url: string }; id: string }>;
 }
 
-const SwatchSelector = ({ colors, onSwatchClick }: SwatchSelectorProps) => {
+const SwatchSelector = ({ colors }: SwatchSelectorProps) => {
   const [selectedColor, setSelectedColor] = useState(colors[0]);
 
   useEffect(() => {
@@ -19,7 +18,6 @@ const SwatchSelector = ({ colors, onSwatchClick }: SwatchSelectorProps) => {
 
   const handleSwatchClick = (color: typeof colors[0]) => {
     setSelectedColor(color);
-    onSwatchClick(color);
   };
 
   if (colors.length === 0) {
@@ -31,12 +29,12 @@ const SwatchSelector = ({ colors, onSwatchClick }: SwatchSelectorProps) => {
       <h2 className="text-sm font-medium text-gray-900">
         Color: {selectedColor.colorName}
       </h2>
-      <div className="mt-4 flex items-center space-x-4">
+      <div className="mt-2 flex items-center space-x-3">
         {colors.map((colorObj) => (
           <div
             key={colorObj.id}
             className={`flex items-center cursor-pointer ${
-              selectedColor.id === colorObj.id ? 'border border-yellow-900 rounded-full' : ''
+              selectedColor.id === colorObj.id ? 'border border-gray-900 rounded-full' : ''
             }`}
             onClick={() => handleSwatchClick(colorObj)}
           >

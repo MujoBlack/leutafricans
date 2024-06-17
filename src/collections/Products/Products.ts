@@ -281,19 +281,11 @@ export const Products: CollectionConfig = {
           required: true,
         },
         {
-          name: 'imageUrls',
-          type: 'array',
-          label: 'Swatch Images',
-          fields: [
-            {
-              name: 'imageUrl',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-          ],
+          name: 'swatchUrl',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
         },
-
       ],
     },
   ],
